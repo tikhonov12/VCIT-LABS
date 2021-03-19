@@ -1,4 +1,4 @@
-﻿#include <stdio.h>
+#include <stdio.h>
 #include <iostream>
 #include <stdlib.h>
 using namespace std;
@@ -9,6 +9,9 @@ void lab4() {
 	int x = 0;
 	int q = 500;
 	int r;
+	int out = 0;
+
+	int outnum;
 
 	_asm {
 		mov eax, x			// переменая для сравнивания предыдущего х
@@ -17,7 +20,7 @@ void lab4() {
 		start:
 		mov x, eax
 			cmp ecx, counter
-			je en
+				je en
 			mov eax, ecx
 			add eax, ecx	//|
 			dec eax			//|
@@ -37,9 +40,9 @@ dcntr :
 			jmp start
 rnd :						// проверка на простоту числа
 		cmp eax, 2			// если 2, то простое
-				je start
+				je m6
 			cmp ebx, eax
-				jge start
+				jge m6
 			mov edx, 0
 			mov r, eax
 			div ebx
@@ -48,39 +51,35 @@ rnd :						// проверка на простоту числа
 				je dcntr
 			inc ebx
 				jmp rnd
-en :
 
+	m6:
+		cmp out, 52
+			je start
+			inc out
+			mov outnum, ecx
+			jmp start
+	en:
 	} 
 	cout << endl << count << endl;
+	cout << "CountNum[51] = " << outnum;
 }
 
-/* int out = 0;
-int outnum;*/
-//<< "CountNum[50] = " << outnum
-/* m6:
-cmp out,51
-je m1
-inc out
-mov outnum,ecx
-jmp m1*/
 void lab3() {
-	signed char a = 17; //1 байт
-	signed char b = 3; //1 байт
-	short q3, q4, c = 4; //2 байта
+	signed char a = 20; //1 байт
+	signed char b = 30; //1 байт
+	short q3, q4, c = 10; //2 байта
 	int q1, q2;
 
 	signed char q;
 	//d=(a^2)*b/c
 	_asm {
 		mov al, a
-		cbw
-		imul ax
-		cwd
+		imul al
+		cwde
 		mov ebx, eax
 		mov al, b
 		cbw
-		cwd
-		xchg eax, ebx
+		cwde
 		imul ebx
 		movsx ecx, c
 		idiv ecx
@@ -91,15 +90,15 @@ void lab3() {
 	//e=(a-b)/(a-c)
 	_asm {
 		mov al, a
-		sbb al, b
+		sub al, b
 		mov b, al
 		mov al, a
 		cbw
-		sbb ax, c
+		sub ax, c
 		mov c, ax
-		mov edx, 0
 		mov al, b
 		cbw
+		cwd
 		idiv c
 		mov q3, ax //вывод
 		mov q4, dx //остаток
@@ -137,5 +136,5 @@ void lab1()
 }
 int main()
 {
-	lab3();
+	lab4();
 }
